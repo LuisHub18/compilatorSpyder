@@ -51,7 +51,7 @@ public class SpiderSemantic {
                                         Integer.parseInt(entry.getValue()) : Integer.parseInt(valueToken.getLexeme());
                                 value += operator * tokenValue;
                             }catch(Exception e){
-                                throw new SemanticException("El identificador '" + valueToken.getLexeme() + "' no tiene un valor asignado o tiene un valor invalido.");
+                                //throw new SemanticException("El identificador '" + valueToken.getLexeme() + "' no tiene un valor asignado o tiene un valor invalido.");
                             }
                         }
                         j++;

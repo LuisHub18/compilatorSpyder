@@ -44,6 +44,7 @@ public class SpiderMidCode {
                sb.append(bitToHex(producciones)).append("\t").append(identifier).append("\t DB \t ?\n");
            }
         }
+        producciones = 0;
         sb.append("\n");
         sb.append("\t\t.CODE\n");
         for (int i = 0; i < tokens.size(); i++) {
