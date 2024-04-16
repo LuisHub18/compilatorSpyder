@@ -31,14 +31,14 @@ public class SpiderMidCode {
 
         for (String identifier : symbolTable.getSymbolMap().keySet()) {
            if (symbolTable.getType(identifier) == TokenType.NUMBER && !symbolTable.getSymbolEntry(identifier).getValue().equals("0")) {
-               producciones+=4;
-               sb.append(bitToHex(producciones)).append("\t").append(identifier).append("\t DD \t").append(symbolTable.getSymbolEntry(identifier).getValue()).append("\n");
+               producciones+=2;
+               sb.append(bitToHex(producciones)).append("\t").append(identifier).append("\t DW \t").append(symbolTable.getSymbolEntry(identifier).getValue()).append("\n");
            }else if (symbolTable.getType(identifier) == TokenType.STRING && !symbolTable.getSymbolEntry(identifier).getValue().equals("0")) {
                producciones+=8;
                sb.append(bitToHex(producciones)).append("\t").append(identifier).append("\t DB \t").append(symbolTable.getSymbolEntry(identifier).getValue()).append("\n");
            } else if (symbolTable.getType(identifier) == TokenType.NUMBER) {
-               producciones+=4;
-               sb.append(bitToHex(producciones)).append("\t").append(identifier).append("\t DD \t ?\n");
+               producciones+=2;
+               sb.append(bitToHex(producciones)).append("\t").append(identifier).append("\t DW \t ?\n");
            } else if (symbolTable.getType(identifier) == TokenType.STRING) {
                producciones+=8;
                sb.append(bitToHex(producciones)).append("\t").append(identifier).append("\t DB \t ?\n");
