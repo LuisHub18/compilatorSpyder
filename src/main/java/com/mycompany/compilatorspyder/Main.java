@@ -11,6 +11,8 @@ import javax.swing.SwingUtilities;
                 x := 5;
                 y := 3;
                 z := x + y;
+                print("Hola Mundo");
+                print("Adios Mundo");
             }
             *Error Semantico
             block Test{

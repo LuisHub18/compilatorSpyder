@@ -26,9 +26,26 @@ public class SpiderParser {
 
          // Verifica si todavía hay tokens disponibles y si no se ha encontrado el cierre del bloque
         while (currentTokenIndex < tokens.size() && getCurrentToken().getType() != TokenType.BLOCK_CLOSE) {
-            parseAssignment(); // Analiza cada asignación dentro del bloque  
+            if (getCurrentToken().getType() == TokenType.PRINT) {
+                parsePrint(); // Analiza la instrucción print
+            } else {
+                parseAssignment(); // Analiza cada asignación dentro del bloque
+            }
         }
         match(TokenType.BLOCK_CLOSE); // Verifica el cierre del bloque
+    }
+
+    private void parsePrint() throws ParseException {
+        match(TokenType.PRINT); // Verifica la instrucción print
+        match(TokenType.OPEN_PARENTHESIS);
+        match(TokenType.STRING, TokenType.IDENTIFIER, TokenType.NUMBER); // Verifica el argumento de print
+        // Permite la concatenación de múltiples argumentos
+        while (getCurrentToken().getType() == TokenType.PLUS) {
+            match(TokenType.PLUS);
+            match(TokenType.STRING, TokenType.IDENTIFIER, TokenType.NUMBER);
+        }
+        match(TokenType.CLOSE_PARENTHESIS);
+        match(TokenType.END_OF_LINE); // Verifica el final de la instrucción print
     }
 
     private void parseAssignment() throws ParseException {

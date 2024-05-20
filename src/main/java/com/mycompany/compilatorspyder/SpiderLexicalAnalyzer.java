@@ -22,10 +22,12 @@ public class SpiderLexicalAnalyzer {
         String commentPattern = "#.*"; // Comentario: cualquier texto después de #
         String blockPattern = "block"; // Palabras reservadas
         String printPattern = "print"; // Palabras reservadas
+        String openParenthesisPattern = "\\("; // Paréntesis de apertura
+        String closeParenthesisPattern = "\\)"; // Paréntesis de cierre
         String unknownPattern = "[@%&]";
         String endOfLinePattern = ";"; // Fin de línea
 
-        String regexPattern = identifierPattern +"|"+ assignmentPattern + "|" + plusPattern + "|" + minusPattern + "|" + blockOpenPattern + "|" + blockClosePattern + "|" + numberPattern + "|" + stringPattern + "|"+unknownPattern+"|" + commentPattern + "|" + endOfLinePattern;
+        String regexPattern =  blockPattern + "|" + printPattern + "|" + openParenthesisPattern + "|" + identifierPattern + "|" + closeParenthesisPattern + "|"  + assignmentPattern + "|" + plusPattern + "|" + minusPattern + "|" + blockOpenPattern + "|" + blockClosePattern + "|" + numberPattern + "|" + stringPattern + "|" + commentPattern + "|" + unknownPattern + "|" + endOfLinePattern;
         Pattern pattern = Pattern.compile(regexPattern);
         Matcher matcher = pattern.matcher(sourceCode);
 
@@ -53,6 +55,10 @@ public class SpiderLexicalAnalyzer {
                 type = TokenType.PLUS;
             } else if (token.matches(minusPattern)) {
                 type = TokenType.MINUS;
+            }  else if (token.matches(openParenthesisPattern)) {
+                type = TokenType.OPEN_PARENTHESIS;
+            } else if (token.matches(closeParenthesisPattern)) {
+                type = TokenType.CLOSE_PARENTHESIS;
             } else if (token.matches(blockClosePattern)) {
                 type = TokenType.BLOCK_CLOSE;
             } else if (token.matches(endOfLinePattern)) {

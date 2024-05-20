@@ -44,7 +44,26 @@ public class SpiderMidCode {
                sb.append(bitToHex(producciones)).append("\t").append(identifier).append("\t DB \t ?\n");
            }
         }
+
+        int printCount = 0;
+        for(int i = 0; i < tokens.size(); i++){
+            if(tokens.get(i).getType() == TokenType.PRINT){
+                printCount++;
+                producciones+=8;
+                Token msgValue = tokens.get(i + 2);
+                if(msgValue.getType() == TokenType.STRING){
+                    sb.append(bitToHex(producciones)).append("\tmsg").append(printCount).append("\t DB \t ").append(msgValue.getLexeme()).append(", '$'\n");
+                }else if(msgValue.getType() == TokenType.IDENTIFIER){
+                    sb.append(bitToHex(producciones)).append("\tmsg").append(printCount).append("\t DB \t ").append(symbolTable.getSymbolEntry(msgValue.getLexeme()).getValue()).append(", '$'\n");
+                } else if (msgValue.getType() == TokenType.NUMBER){
+                    sb.append(bitToHex(producciones)).append("\tmsg").append(printCount).append("\t DB \t ").append(msgValue.getLexeme()).append(", '$'\n");
+                }
+            }
+        }
+
         producciones = 0;
+        printCount = 0;
+
         sb.append("\n");
         sb.append("\t\t.CODE\n");
         for (int i = 0; i < tokens.size(); i++) {
@@ -62,6 +81,14 @@ public class SpiderMidCode {
                 sb.append(bitToHex(producciones)).append("\t").append("\tSUB \tAX, ").append(tokens.get(i+1).getLexeme()).append("\n");
                 producciones+=1;
                 sb.append(bitToHex(producciones)).append("\t").append("\tMOV \t").append(tokens.get(i-3).getLexeme()).append(", AX\n");
+            } else if(tokens.get(i).getType() == TokenType.PRINT){
+                printCount++;
+                producciones+=1;
+                sb.append(bitToHex(producciones)).append("\t").append("\tMOV \tDX,OFFSET ").append("msg").append(printCount).append("\n");
+                producciones+=1;
+                sb.append(bitToHex(producciones)).append("\t").append("\tMOV \tAH, 9\n");
+                producciones+=1;
+                sb.append(bitToHex(producciones)).append("\t").append("\tINT \t21H\n");
             }
         }
         return sb.toString();
