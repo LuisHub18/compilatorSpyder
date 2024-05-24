@@ -66,6 +66,7 @@ public class CompilerUI extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenu2Item1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -292,6 +293,14 @@ public class CompilerUI extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
+        jMenu2Item1.setText("Empezar");
+        jMenu2Item1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenu2Item1);
+
         jMenuItem3.setText("Guardar");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -389,6 +398,38 @@ public class CompilerUI extends javax.swing.JFrame {
         jTextArea1.setText("");
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void jMenu2ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        jTextArea4.setText("");
+        String codigo = jTextArea1.getText();
+        try{
+            ArrayList<Token> tokens = (ArrayList<Token>) SpiderLexicalAnalyzer.analyze(codigo);
+
+            // Realizar el análisis sintáctico
+            SpiderParser parser = new SpiderParser(tokens);
+            parser.parse(); // Puede lanzar una ParseException si hay un error
+
+            SpiderSemantic semantico = new SpiderSemantic(tokens);
+            semantico.analyze();
+
+            System.out.println("Symbol Table: " + semantico.getSymbolTable());
+
+            SpiderMidCode midCode = new SpiderMidCode(semantico.getSymbolTable(), tokens);
+
+            SpiderObjectCode objectCode = new SpiderObjectCode(midCode.generateAssemblyIntelCode());
+            jTextArea4.append(objectCode.translateCode());
+        }catch(LexicalException lexEx){
+            jTextArea4.append("No se puede compilar debido a fallo en analisis lexico.");
+        }catch(ParseException parseEx){
+            jTextArea4.append("No se puede compilar debido a fallo en analisis sintactico");
+        }catch(SemanticException semEx){
+            jTextArea4.append("No se puede compilar debido a fallo en analisis semantico");
+        }
+//        catch(Exception ex){
+//            jTextArea4.append("No se puede compilar debido a fallo en creacion de codigo intermedio");
+//        }
+    }
+
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         JFileChooser fileChooser = new JFileChooser();
         int returnValue = fileChooser.showOpenDialog(null);
@@ -471,6 +512,7 @@ public class CompilerUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuItem jMenu2Item1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
